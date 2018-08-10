@@ -2,8 +2,6 @@
 
 Avant de plonger dans la gestion d'état, ce chapitre vous fournit les définitions générales ainsi que pour la gestion d'état afin de se construire un vocabulaire commun au livre. Cela pourra vous aider pour suivre le livre sans peine, sans laisser de place à la confusion.
 
-Before we dive into state management, this chapter gives you general definitions and definitions for state managements to build up a common vocabulary for state management for this book. It should help you to follow the book effortlessly when reading it without leaving space for confusion.
-
 ### Les fonctions pures
 
 Les fonctions pures sont un concept issu du paradigme de programmation fonctionnelle. Cela dit qu'une fonction pure retourne toujours la même sortie si la même entrée est donnée. Il y n'a pas de strate entre, qui pourrait altérer la sortie en chemin lorsque l'entrée reste inchangée. La strate entre, qui peut potentiellement altérer la sortie, est appelé un **side-effect** (= effet de bord). Ainsi, les fonctions pures n'ont pas d'effet de bord. Deux principaux bénéfices de ces fonctions pures sont la prédictabilité et la testabilité.
