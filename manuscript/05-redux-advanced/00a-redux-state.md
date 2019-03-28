@@ -481,11 +481,9 @@ const ConnectedTodoItem = connect(
 
 Le composant `TodoItem` lui-même restera inchangé. Il aura encore l'élément `todo` et l'handler `onToggleTodo()` en tant qu'argument. Qui plus est, vous pouvez remarquer deux concepts supplémentaires qui ont été expliqué plus tôt. Premièrement, le sélecteur gagne en complexité car il dispose d'arguments optionnels pour sélectionner des propriétés dérivées depuis l'état. Deuxièmement, la fonction `mapStateToProps()` fait l'usage des *props* entrantes du composant `TodoList` qui utilise le composant `ConnectedTodoItem`.
 
-Comme vous pouvez le voir, l'état normalisé requiert d'utiliser plus de composants connectés. Plus de composants sont responsables de sélectionner leurs propriétés dérivées requises. Mais dans une application grandissante, le modèle suivant peut rendre le raisonnement plus facile. Vous transmettez seulement des propriétés qui sont véritablement nécessaire au composant. Dans le dernier cas, le composant `TodoList` est seulement concerné par une de références néanmoins, le composant `TodoItem` est lui-même concerné par l'entié qui est selectionné en utilisant la référence transmise par le composant `TodoList`.
-As you can see, the normalized state requires to use more connected components. More components are responsible to select their needed derived properties. But in a growing application, following this pattern can make it easier to reason about it. You only pass properties that are really necessary to the component. In the last case, the `TodoList` component only cares about a list of references yet the `TodoItem` component itself cares about the entity that is selected by using the reference passed down by the `TodoList` component.
+Comme vous pouvez le voir, l'état normalisé requiert d'utiliser plus de composants connectés. Plus de composants sont responsables de sélectionner leurs propriétés dérivées requises. Mais dans une application grandissante, le modèle suivant peut rendre le raisonnement beaucoup plus facile. Vous transmettez seulement des propriétés qui sont véritablement nécessaires au composant. Dans le dernier cas, le composant `TodoList` est seulement concerné par une liste de références, tandis que le composant `TodoItem` est seulement concerné par l'entité qui est selectionnée en utilisant la référence transmise par le composant `TodoList`.
 
-Il existe une autre manière de dénormaliser votre état normalisé lors de l'utilisation d'une bibliothèque telle que normalizr. Le précédent scénario vous permettez de passer le minimum de propriétés aux composants. Chaque composant était responsable de sélectionner son état. Dans le prochain cas, vous dénormaliser votre état dans un seul composant pendant que les autres composants n'ont pas besoin de s'en préoccuper. Vous utiliserez le schéma défini, que vous avez utilisé pour la normalization initiale, pour faire renverser la normalisation.
-There exists another way to denormalize your normalized state when using a library such as normalizr. The previous scenario allowed you to only pass the minimum of properties to the components. Each component was responsible to select its state. In the nexy scenario, you will denormalize your state in one component while the other components don't need to care about it. You will use the defined schema, which you have used for the initial normalization, to reverse the normalization.
+Il existe une autre manière de dénormaliser votre état normalisé lors de l'utilisation d'une bibliothèque telle que normalizr. Le précédent scénario vous permettez de passer le minimum de propriété aux composants. Chaque composant était responsable de sélectionner son état. Dans le prochain cas, vous dénormaliserez votre état dans un seul composant ainsi les autres composants n'ont pas besoin de s'en préoccuper. Vous utiliserez le même schéma, que lors de la normalisation initiale, mais cette fois-ci pour inverser la normalisation.
 
 {title="Code Playground",lang="javascript"}
 ~~~~~~~~
@@ -520,47 +518,34 @@ function mapStateToProps(state) {
 const ConnectedTodoList = connect(mapStateToProps)(TodoList);
 ~~~~~~~~
 
-Dans ce scénario, l'entiereté de la structure de données normalisée a été dénormalisé au sein du sélecteur. Vous avez toute la liste de todos dans votre composant `TodoList`. Le composant `TodoItem` n'aura pas besoin de se préoccuper de la dénormalisation.
-In this scenario, the whole normalized data structure gets denormalized in the selector. You will have the whole list of todos in your `TodoList` component. The `TodoItem` component wouldn't need to take care about the denormalization.
+Dans ce scénario, l'entièreté de la structure de données normalisée a été dénormalisé au sein du sélecteur. Vous avez toute la liste de todos dans votre composant `TodoList`. Le composant `TodoItem` n'aura pas besoin de se préoccuper de la dénormalisation.
 
-Comme vous pouvez le voir, il y a deux manières essentielles sur la façon de traiter un état normalisé dans vos sélecteurs ou en général dans les fonctions `mapStateToProps()`. C'est à vous de trouver l'implémentation qui convient le mieux à votre propre cas d'utilisation. Peut être, qu'en premier lieu vous n'avez même pas besoin de normaliser votre état, car il est déjà aplati ou pas très profondément imbriqué.
-As you can see, there are two essential ways on how to deal with normalized state in your selectors or in general in the `mapStateToProps()` functions. It is up to you to find about the best suited implementation for your own use case. Perhaps you don't even need to normalize your state in the first place, because it is already flat or not very deeply nested.
+Comme vous pouvez le voir, il y a essentiellement deux façons de traiter un état normalisé : dans vos sélecteurs ou en général dans les fonctions `mapStateToProps()`. C'est à vous de trouver l'implémentation qui convient le mieux à votre propre cas d'utilisation. Peut-être, qu'en premier lieu vous n'avez même pas besoin de normaliser votre état, car il est déjà aplati ou qu'il n'est pas très profondément imbriqué.
 
 ### Reselect
 
-Lors de l'utilisation de sélecteurs dans une application grandissante, vous devez prendre en considération une bibliothèque apellez [reselect](https://github.com/reactjs/reselect) qui vous fournie des selecteurs avancés. En gros, elle utilise le même concept de simpe sélecteurs comme vous l'avez appris avant, mais débarque avec deux améliorations.
-When using selectors in a scaling application, you should consider a library called [reselect](https://github.com/reactjs/reselect) that provides you with advanced selectors. Basically, it uses the same concept of plain selectors as you have learned before, but comes with two improvements.
+Lors de l'utilisation de sélecteurs dans une application grandissante, vous devez prendre en considération une bibliothèque appelée [reselect](https://github.com/reactjs/reselect) qui vous fournit des sélecteurs avancés. En gros, elle utilise le même concept de simples sélecteurs comme vous l'avez appris avant, mais débarque avec deux améliorations.
 
 Un simple sélecteur a une contrainte :
-A plain selector has one constraint:
 
 * *"les sélecteurs peuvent calculer des données dérivées, permettant à Redux de stocker l'état minimal."*
-* *"Selectors can compute derived data, allowing Redux to store the minimal possible state."*
 
-Il y a deux contraintes en plus lors de l'utilisation de sélecteurs au travers de la bibliothèque reselect :
-There are two more constraints when using selectors from the reselect library:
+Il y a deux contraintes additionnelles lors de l'utilisation de sélecteurs au travers de la bibliothèque reselect :
 
 * *"Les sélecteurs sont efficaces. Un sélecteur n'est pas recalculé à moins que l'un de ses arguments change."*
-* *"Les sélecteurs sont composables. Ils peuvent être utilisé en tant qu'entrée pour d'autre sélecteurs."*
-* *"Selectors are efficient. A selector is not recomputed unless one of its arguments change."*
-* *"Selectors are composable. They can be used as input to other selectors."*
+* *"Les sélecteurs sont composables. Ils peuvent être utilisés en tant qu'entrée pour d'autres sélecteurs."*
 
-Les sélecteurs sont des fonctions pures sans aucun effet de bord. La sortie ne change pas lorsque l'entrée reste la même. Par conséquent, lorsqu'une fonction est appelé deux fois et ses argument reste inchangés, il retourne la même sortie. Ce postulat est utilisé dans les sélecteurs de reselect. C'est apellé en programmation mémoïzation. Un sélecteur n'a pas besoin de tout recalculer à chaque fois lorsque ses entrées ne change pas. Il retournera simplement la même sortie, car c'est une fonction pure. Avec la memoïzation il se souvient des précédentes entrées et s'ils demeurent inchangées il retourne la précédente sortie. Dans une application grandissante cela peut avoir une impact de performance.
-Selectors are pure functions without any side-effects. The output doesn't change when the input stays the same. Therefore, when a function is called twice and its arguments didn't change, it returns the same output. This proposition is used in reselect's selectors. It is called memoization in programming. A selector doesn't need to compute everything again when its input didn't change. It will simply return the same output, because it is a pure function. With memoization it remembers the previous input and if the input didn't change it returns the previous output. In a scaling application this can have a performance impacts.
+Les sélecteurs sont des fonctions pures sans aucun effet de bord. La sortie ne change pas lorsque l'entrée reste la même. Par conséquent, lorsqu'une fonction est appelée deux fois et ses arguments restent inchangés, elle retourne la même sortie. Ce postulat est utilisé dans les sélecteurs de reselect. Ce principe est appelé en programmation la mémoïzation. Un sélecteur n'a pas besoin de tout recalculer dès lors que ses entrées ne changent pas. Il retournera simplement la même sortie, car c'est une fonction pure. Avec la memoïzation il se souvient des précédentes entrées et si elles demeurent inchangées il retourne la précédente sortie. Dans une application grandissante cela peut avoir un impact de performance.
 
-Un autre bénéfice, lors de l'utilisation de reselect, c'est la possibilité de composer les sélecteurs. Il soutient le cas d'implémentation de sélecteurs réutilisable qui résolvent seulement un problème. Ensuite, ils peuvent être composé dans un style de programmation fonctionelle.
-Another benefit, when using reselect, is the ability to compose selectors. It supports the case of implementing reusable selectors that only solve one problem. Afterward they can be composed in a functional programming style.
+Un autre bénéfice, lors de l'utilisation de reselect, c'est la possibilité de composer les sélecteurs. Il supporte le fait d'implémenter des sélecteurs réutilisables qui résolvent seulement un problème. Ensuite, ils peuvent être composés avec une approche de programmation fonctionnelle.
 
 Le livre ne plongera pas plus profondément dans la bibliothèque reselect. Lors de l'apprentissage de Redux il est bon d'avoir connaissance de ces sélecteurs avancés, mais vous pouvez tout aussi bien utiliser les simples sélecteurs pour débuter. Si vous ne pouvez attendre, vous pouvez lire les exemples d'utilisation dans le [dépôt officiel GitHub](https://github.com/reactjs/reselect) et l'appliquer dans vos projets tout en lisant le livre.
-The book will not dive deeper into the reselect library. When learning Redux it is good to know about these advanced selectors, but you are fine by using plain selectors in the beginning. If you cannot stay put, you can read up the example usages in the [official GitHub repository](https://github.com/reactjs/reselect) and apply in your projects while reading the book.
 
 ## Cas pratique: Todo avec Redux avancé
 
-Maintenant, dans l'application Todo, vous pouvez tout refactorer tpour utiliser les techniques plus avancés que vous avez apprises dans les chapitres précédents : un middleware, une structure de données immutable utilisant les opérateurs de décomposition de JavaScript, une structure d'état normalisée et des sélecteurs. Continuons avec l'application Todo que vous avez construite lorsque vous connecté React et Redux. La dernière version peut être trouvée dans ce [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/3.0.0).
-Now in the Todo application, you can refactor everything to use the advanced techniques you have learned in the previous chapters: a middleware, an immutable data structure using JavaScript spread operators, a normalized data structure and selectors. Let's continue with the Todo application that you have build when you connected React and Redux. The last version can be found in this [GitHub repository](https://github.com/rwieruch/taming-the-state-todo-app/tree/3.0.0).
+Maintenant, dans l'application Todo, vous pouvez tout refactorer pour utiliser les techniques plus avancées que vous avez apprises dans les chapitres précédents : un middleware, une structure de données immutable utilisant les opérateurs de décomposition de JavaScript, une structure d'état normalisée et des sélecteurs. Continuons avec l'application Todo que vous avez construite lorsque vous avez connecté React et Redux. La dernière version peut être trouvée sur ce [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/3.0.0).
 
 En premier lieu, utilisons le middleware [redux-logger](https://github.com/evgenyrodionov/redux-logger). Ainsi, vous devez l'installer à l'aide de la ligne de commande :
-In the first part, let's use the [redux-logger](https://github.com/evgenyrodionov/redux-logger) middleware. Therefore, you have to install it on the command line:
 
 {title="Command Line: /",lang="text"}
 ~~~~~~~~
@@ -568,7 +553,6 @@ npm install --save redux-logger
 ~~~~~~~~
 
 Par la suite vous pouvez l'utiliser lorsque vous créez votre store :
-Next you can use it when you create your store:
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -603,11 +587,9 @@ const store = createStore(
 # leanpub-end-insert
 ~~~~~~~~
 
-maintenant, lorsque que vous démarrer l'application Todo, vous devez voir la sortie du `logger` dans la console développeur de votre navigateur dès lors que vous dispatcher des actions. L'application Todo avec le middleware utilisant redux-logger peut être trouvé dans ce [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/4.0.0).
-When you start your Todo application now, you should see the output of the `logger` in the developer console of your browser when dispatching actions. The Todo application with the middleware using redux-logger can be found in this [GitHub repository](https://github.com/rwieruch/taming-the-state-todo-app/tree/4.0.0).
+Maintenant, lorsque que vous démarrez l'application Todo, vous devez voir la sortie du `logger` dans la console développeur de votre navigateur dès lors que vous dispatcher des actions. L'application Todo avec le middleware utilisant redux-logger peut-être trouvé sur ce [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/4.0.0).
 
-la seconde partie de ce chapitre utilise les opérateurs de décomposition JavaScript à la place de la fonction `Object.assign()` pour conserver la structure de données immutable. Vous pouvez l'appliquer dans vos fonctions reducer :
-The second part of this chapter is using the JavaScript spread operators instead of the `Object.assign()` function to keep an immutable data structure. You can apply it in your reducer functions:
+La seconde partie de ce chapitre utilise les opérateurs de décomposition JavaScript à la place de la fonction `Object.assign()` pour conserver la structure de données immutable. Vous pouvez l'appliquer dans vos fonctions reducer :
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -630,10 +612,8 @@ function applyToggleTodo(state, action) {
 ~~~~~~~~
 
 L'application doit fonctionner pareillement, mais cette fois avec l'opérateur de décomposition qui conserve la structure de données immutable et ainsi un objet d'état immutable. Le code source peut être trouvé de nouveau dans ce [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/5.0.0).
-The application should work the same as before, but this time with the spread operator for keeping an immutable data structure and thus an immutable state object. The source code can be found again in this [GitHub repository](https://github.com/rwieruch/taming-the-state-todo-app/tree/5.0.0).
 
-Dans la troisième partie de l'application des techniques avancées issues des chapitres précédents, vous utiliserez une structure d'état normalisé. Par conséquent vous pouvez installer en ligne de commande la superbe bibliothèque [normalizr](https://github.com/paularmstrong/normalizr) :
-In the third part of applying the advanced techniques from the previous chapters, you will use a normalized state structure. Therefore, you can install the neat library [normalizr](https://github.com/paularmstrong/normalizr) on the command line:
+pour la troisième partie de la mise en place des techniques avancées issues des chapitres précédents, vous utiliserez une structure d'état normalisé. Par conséquent vous pouvez installer en ligne de commande la superbe bibliothèque [normalizr](https://github.com/paularmstrong/normalizr) :
 
 {title="Command Line: /",lang="text"}
 ~~~~~~~~
@@ -641,7 +621,6 @@ npm install --save normalizr
 ~~~~~~~~
 
 Regardons un peu l'état initial pour le `todoReducer`. Vous pouvez faire un état initial pour ce dernier. Par exemple, pourquoi ne pas compléter tous les exemples de code de ce livre en ayant des éléments todo pour cela?
-Let's have a look at the initial state for the `todoReducer`. You can make up an initial state for them. For instance, what about completing all coding examples in this book by having todo items for them?
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -664,7 +643,6 @@ function todoReducer(state = todos, action) {
 ~~~~~~~~
 
 Vous pouvez utiliser normalizr pour normaliser cette structure de données. Premièrement, vous devez definir un schéma :
-You can use normalizr to normalize this data structure. First, you have to define a schema:
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -685,8 +663,7 @@ const todoSchema = new schema.Entity('todo');
 # leanpub-end-insert
 ~~~~~~~~
 
-Deuxièmement, vous pouvez utiliser le schéma pour normaliser votre todos initiale et l'utiliser en tant que paramêtre par défaut de votre `todoReducer`.
-Second, you can use the schema to normalize your initial todos and use them as default parameter in your `todoReducer`.
+Deuxièmement, vous pouvez utiliser le schéma pour normaliser votre todos initiale et l'utiliser en tant que paramètre par défaut de votre `todoReducer`.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -709,8 +686,7 @@ function todoReducer(state = initialTodoState, action) {
 }
 ~~~~~~~~
 
-Troisièmement, votre `todoReducer` a besoin de manipuler la structure d'état normalisé. Il doit traiter avec les 'entities" et un 'result' (= liste des identifiants). Vous pouvez afficher les todos normalisés même si l'application Todo crash lorsque vous tenter de la démarrer.
-Third, your `todoReducer` needs to handle the normalized state structure. It has to deal with entities and a result (list of ids). You can output the normalized todos even though the Todo application crashes when you attempt to start it.
+Troisièmement, votre `todoReducer` a besoin de manipuler la structure d'état normalisé. Il doit traiter avec les `entities` et un `result` (= liste des identifiants). Vous pouvez afficher les todos normalisés même si l'application Todo crash lorsque vous tentez de la démarrer.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -718,8 +694,7 @@ const normalizedTodos = normalize(todos, [todoSchema]);
 console.log(normalizedTodos);
 ~~~~~~~~
 
-le reducer ajusté aura les fonctions internes suivantes :
-The adjusted reducer would have the following internal functions:
+Le reducer ajusté aura les fonctions internes suivantes :
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -739,8 +714,7 @@ function applyToggleTodo(state, action) {
 }
 ~~~~~~~~
 
-Elles opèrent sur `entities` and `ids`, car ceci est la sortie de la normalisation. Enfin mais pas des moindres, lors de la connection de Redux avec React, le composant a besoin d'être conscient de la structure d'état normalisée. Premièrement, la connection entre le store et les composants :
-It operates on `entities` and `ids`, because these are the output from the normalization. Last but not least, when connecting Redux with React, the components need to be aware of the normalized data structure. First, the connection between store and components:
+Elles opèrent sur `entities` et `ids`, car ceci est la sortie de la normalisation. Enfin mais pas des moindres, lors de la connexion de Redux avec React, le composant a besoin d'être conscient de la structure d'état normalisée. Premièrement, la connexion entre le store et les composants :
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -778,7 +752,6 @@ const ConnectedTodoItem = connect(
 ~~~~~~~~
 
 Deuxièmement, le composant `TodoList` reçoit seulement `todosAsIds` et le `TodoItem` reçoit l'entité `todo`.
-Second, the `TodoList` component receives only the `todosAsIds` and the `TodoItem` receives the `todo` entity.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -806,11 +779,9 @@ function TodoItem({ todo, onToggleTodo }) {
 }
 ~~~~~~~~
 
-L'application doit fonctionner de nouveau. Démarrer là et jouer avec. VOus pouvez trouvez le code source sur le [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/6.0.0). Vous avez normalisez votre structure d'état initial et ajusté votre reducer pour traiter avec la nouvelle structure de données.
-The application should work again. Start it and play around with it. You can find the source code in the [GitHub repository](https://github.com/rwieruch/taming-the-state-todo-app/tree/6.0.0). You have normalized your initial state structure and adjusted your reducer to deal with the new data structure.
+L'application doit fonctionner de nouveau. Démarrer là et jouer avec. Vous pouvez trouver le code source sur le [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/6.0.0). Vous avez normalisé votre structure d'état initial et ajusté votre reducer pour traiter avec la nouvelle structure de données.
 
-Dans la quatrième et dernière partie, vous allez utiliser les sélecteurs pour votre architecture Redux. Ce refactoring est assez évident. Vous devez extraire les parties qui opère sur l'état dans vos fonctions  `mapStateToProps()` vers des fonctions de sélection. Premièrement, définiser les fonctions de sélection :
-In the fourth and last part, you are going to use selectors for your Redux architecture. This refactoring is fairly straight forward. You have to extract the parts that operate on the state in your `mapStateToProps()` functions to selector functions. First, define the selector functions:
+Dans la quatrième et dernière partie, vous allez utiliser les sélecteurs pour votre architecture Redux. Ce refactoring est assez évident. Vous devez extraire les parties qui opèrent sur l'état dans vos fonctions  `mapStateToProps()` vers des fonctions de sélection. Premièrement, définissez les fonctions de sélection :
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -825,8 +796,7 @@ function getTodo(state, todoId) {
 }
 ~~~~~~~~
 
-Dexièmement, vous pouvez utiliser ces fonctions à la place d'opérer directement sur l'état dans vos fonctions `mapStateToProps()` :
-Second, you can use these functions instead of operating on the state directly in your `mapStateToProps()` functions:
+Deuxièmement, vous pouvez utiliser ces fonctions à la place d'opérer directement sur l'état dans vos fonctions `mapStateToProps()` :
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -850,12 +820,10 @@ function mapStateToPropsItem(state, props) {
 ~~~~~~~~
 
 L'application Todo doit maintenant fonctionner avec des sélecteurs. De nouveau, vous pouvez la trouver sur le [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/7.0.0).
-The Todo application should work with selectors now. You can find it in the [GitHub repository](https://github.com/rwieruch/taming-the-state-todo-app/tree/7.0.0) again.
 
 ## Cas pratique: Todo mais avec plus de fonctionnalités
 
-Dans l'application Todo, il y a deux pièces manquantes en termes de fonctionnalité souhaité : la possibilité d'ajouter un todo et de filtrer mes todos par leur état complet. Débutons avec la création d'un élément todo. Tout d'abord, il a besoin d'un composant où vous pouvez écrire le nom du todo et soumettre sa création.
-In the Todo application, there are two pieces missing feature-wise: the ability to add a todo and to filter todos by their complete state. Let's begin with the creation of a todo item. First, there needs to be a component where you can type in a todo name and execute its creation.
+Dans l'application Todo, il y a deux pièces manquantes en matière de fonctionnalité souhaitée : la possibilité d'ajouter un todo et de filtrer mes todos par leur état complet. Débutons avec la création d'un élément todo. Tout d'abord, vous avez besoin d'un composant où vous pouvez écrire le nom du todo et soumettre sa création.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -899,8 +867,7 @@ class TodoCreate extends React.Component {
 }
 ~~~~~~~~
 
-De nouveau remarquez que le composant est totalement inconscient de Redux. Il met simplement à jour sa `value` local d'état et une fois le formulaire soumis, il utilise la `value` local de l'état dans la fonction de callback `onAddTodo()` qui est accessible dans l'objet `props`. Le composant ne sait pas si la fonction de callback met à jour l'état local d'un composant parent ou le Redux store. Ensuite, vous pouvez utiliser la version connecté de ce composant dans le composant `TodoApp`.
-Notice again that the component is completely unaware of Redux. It only updates its local `value` state and once the form gets submitted, it uses the local `value` state for the `onAddTodo()` callback function that's accessible in the `props` object. The component doesn't know whether the callback function updates the local state of a parent component or the Redux store. Next, you can use the connected version of this component in the `TodoApp` component.
+De nouveau remarquez que le composant est totalement inconscient de Redux. Il met simplement à jour sa `value` locale d'état et une fois le formulaire soumis, il utilise la `value` local de l'état dans la fonction de callback `onAddTodo()` qui est accessible dans l'objet `props`. Le composant ne sait pas si la fonction de callback met à jour l'état local d'un composant parent ou bien le Redux store. Ensuite, vous pouvez utiliser la version connectée de ce composant dans le composant `TodoApp`.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -918,8 +885,7 @@ function TodoApp() {
 }
 ~~~~~~~~
 
-La dernière étape est de cabler le composant React au Redux store en faisant un composant connecté.
-The last step is to wire the React component to the Redux store by making it a connected component in the first place.
+La dernière étape est de câbler le composant React au Redux store en faisant un composant connecté.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -932,16 +898,14 @@ function mapDispatchToPropsCreate(dispatch) {
 const ConnectedTodoCreate = connect(null, mapDispatchToPropsCreate)(TodoCreate);
 ~~~~~~~~
 
-Il utilise la fonction `mapDispatchToPropsCreate()` pour avoir accès à la méthode dispatch du Redux store. Le créateur d'action `doAddTodo()` prend le nom de l'élément todo, provenant du composant `TodoCreate`, et genère un unique identifiant à l'aide de la fonction `uuid()`. La fonction `uuid()` est une fonction assistante qui provient de la bibliothèque [uuid](https://github.com/kelektiv/node-uuid). Premièrement, vous devez l'installer :
-It uses the `mapDispatchToPropsCreate()` function to get access to the dispatch method of the Redux store. The `doAddTodo()` action creator takes the name of the todo item, coming from the `TodoCreate` component, and generates a unique identifier with the `uuid()` function. The `uuid()` function is a neat little helper function that comes from the [uuid](https://github.com/kelektiv/node-uuid) library. First, you have to install it:
+Il utilise la fonction `mapDispatchToPropsCreate()` pour avoir accès à la méthode dispatch du Redux store. Le créateur d'action `doAddTodo()` prend le nom de l'élément todo, provenant du composant `TodoCreate`, et génère un unique identifiant à l'aide de la fonction `uuid()`. La fonction `uuid()` est une fonction assistante qui provient de la bibliothèque [uuid](https://github.com/kelektiv/node-uuid). Premièrement, vous devez l'installer :
 
 {title="Command Line: /",lang="text"}
 ~~~~~~~~
 npm install --save uuid
 ~~~~~~~~
 
-Et deuxièmement, vous pouvez l'importer pour générer des identifiants unique :
-And second, you can import it to generate unique identifiers for you:
+Et deuxièmement, vous pouvez l'importer pour générer des identifiants uniques :
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -958,7 +922,6 @@ import './index.css';
 ~~~~~~~~
 
 Maintenant, vous pouvez essayer de créer un élément todo dans votre application Todo. Cela doit fonctionner. Ensuite vous voulez rendre possible l'utilisation de votre fonctionnalité de filtre afin de filtrer la liste des éléments todo par leur propriété `completed`. Premièrement, vous devez ajouter un composant `Filter`.
-You can try to create a todo item in your Todo application now. It should work. Next you want to make use of your filter functionality to filter the list of todo items by their `completed` property. First, you have to add a `Filter` component.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -983,8 +946,7 @@ function Filter({ onSetFilter }) {
 }
 ~~~~~~~~
 
-Le composant `Filter` reçoit seulement une fonction de callback. De nouveau il n'a aucune connaissance de la gestion d'état qui se produit au dessus dans Redux ou autrepart. La fonction de callback est seulement utilisé dans différent boutons pour mettre en place des types de filtre spécifique. De nouveau, ous pouvez utiliser le composant connecté dans le composant `TodoApp`.
-The `Filter` component only receives a callback function. Again it doesn't know anything about the state management that is happening above in Redux or somewhere else. The callback function is only used in different buttons to set specific filter types. You can use the connected component in the `TodoApp` component again.
+Le composant `Filter` reçoit seulement une fonction de callback. De nouveau il n'a aucune connaissance de la gestion d'état qui se produit au-dessus dans Redux ou autre part. La fonction de callback est seulement utilisé dans différents boutons pour mettre en place des types de filtre spécifique. De nouveau, vous pouvez utiliser le composant connecté dans le composant `TodoApp`.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -1001,8 +963,7 @@ function TodoApp() {
 }
 ~~~~~~~~
 
-Enfin mais pas des moindres, vous vous devez de connecter le composant `Filter` pour en faites l'utiliser dans le composant `TodoApp`. Cela dispatche le créateur d'action `doSetFilter` en passant le type de filtre issue des bouttons sous-jacents du composant `Filter`.
-Last but not least, you have to connect the `Filter` component to actually use it in the `TodoApp` component. It dispatched the `doSetFilter` action creator by passing the filter type from the underlying buttons in the `Filter` component.
+Enfin mais pas des moindres, vous vous devez de connecter le composant `Filter` pour en faites l'utiliser dans le composant `TodoApp`. Cela dispatche le créateur d'action `doSetFilter` en passant le type de filtre issu des boutons sous-jacents du composant `Filter`.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -1015,8 +976,7 @@ function mapDispatchToPropsFilter(dispatch) {
 const ConnectedFilter = connect(null, mapDispatchToPropsFilter)(Filter);
 ~~~~~~~~
 
-Lorsque vous démarrer votre Todo application, vous verrez que le `filterState` changera une fois que vous cliquer sur l'un de vos bouttons de filtre. Mais rien ne se produira au niveau de vos todos affichées. Ils ne sont pas filtrés et c'est parceque dans votre sélecteur vous selectionner la liste complète de todos. La prochaine étape consisterait à régler le sélecteur afin de seulement sélectionner les todos dans la liste qui correspondent au filtre. Premièrement, vous pouvez définir des fonctions de filtres qui font correspondre les todos par rapport à leur état `completed`.
-When you start your Todo application now, you will see that the `filterState` will change once you click on one of your filter buttons. But nothing happens to your displayed todos. They are not filtered and that's because in your selector you select the whole list of todos. The next step would be to adjust the selector to only select the todos in the list that are matching the filter. First, you can define filter functions that match todos according to their `completed` state.
+Lorsque vous démarrez votre Todo application, vous verrez que le `filterState` changera une fois que vous cliquer sur l'un de vos bouttons de filtre. Mais rien ne se produira au niveau de vos todos affichées. Ils ne sont pas filtrés ceci est dû au fait que dans votre sélecteur vous sélectionnez la liste complète de todos. La prochaine étape consisterait à régler le sélecteur afin de retenir seulement les todos dans la liste qui correspondent au filtre. Premièrement, vous pouvez définir des fonctions de filtres qui font correspondre les todos par rapport à leurs états `completed`.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -1029,8 +989,7 @@ const VISIBILITY_FILTERS = {
 };
 ~~~~~~~~
 
-Deuxièmement, vous pouvez utiliser votre sélecteur pour sélectionner seulement les todos correspondant au filtre. Vous avez déjà tout les sélecteurs en place. Mais vous avez besoin de régler l'un d'entre eux pour filtrer les todos en rapport avec le `filterState` issue du Redux store.
-Second, you can use your selector to only select the todos matching a filter. You already have all selectors in place. But you need to adjust one of them to filter the todos according to the `filterState` from the Redux store.
+Deuxièmement, vous pouvez utiliser votre sélecteur pour sélectionner seulement les todos correspondant au filtre. Vous avez déjà tous les sélecteurs en place. Mais vous avez besoin de régler l'un d'entre eux pour filtrer les todos en rapport avec le `filterState` issu du Redux store.
 
 {title="src/index.js",lang="javascript"}
 ~~~~~~~~
@@ -1050,8 +1009,6 @@ function getTodo(state, todoId) {
 }
 ~~~~~~~~
 
-Puisque votre état est normalisé, vous devez opérer une projection au travers de tous vos `ids` pour obtenir une liste de `todos`, les filtrer à l'aide de `filterState`, et refaire une projection de nouveau pour sélectionner les `ids`. C'est un compromis que vous allez rencontrer lorsque votre structure de données est normalisé, car un moment donné vous devez toujours le dénormaliser. Votre fonctionnalité de filtre doit fonctionner une fois que vous démarrer votre application de nouveau.
-Since your state is normalized, you have to map through all your `ids` to get a list of `todos`, filter them by `filterState`, and map them back to 'ids'. That's a tradeoff you are going when normalizing your data structure, because you always have to denormalize it at some point. Your filter functionality should work once you start your application again.
+Puisque votre état est normalisé, vous devez opérer une projection au travers de tous vos `ids` pour obtenir une liste de `todos`, les filtrer à l'aide de `filterState`, et refaire une projection de nouveau pour sélectionner les `ids`. C'est un compromis que vous allez rencontrer lorsque votre structure de données est normalisée, car un moment donné vous devez toujours le dénormaliser. Maintenant, votre fonctionnalité de filtre doit fonctionner une fois que vous démarrer votre application de nouveau.
 
-Vous pouvez trouver la version final de l'application dans ce [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/8.0.0). Cela applique tous les connaissances au sujet du Redux middleware, des structures de données normalisés et immutables et des sélecteurs.
-You can find the final application in this [GitHub repository](https://github.com/rwieruch/taming-the-state-todo-app/tree/8.0.0). It applies all the learnings about the Redux middleware, immutable and normalized data structures and selectors.
+Vous pouvez trouver la version finale de l'application sur ce [dépôt GitHub](https://github.com/rwieruch/taming-the-state-todo-app/tree/8.0.0). Cela applique tous les connaissances au sujet du Redux middleware, des structures de données normalisées et immutables ainsi que des sélecteurs.
